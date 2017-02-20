@@ -1,0 +1,904 @@
+Bash scripting
+----------------------------------------------------------------------------------------------------
+Change to root user :   sudo bash     or su 
+
+Command to change the hostname  CMD: hostnamectl
+hostnamectl
+hostnamectl set-hostname --static "LAKSHMI"
+dnf update
+dnf install vim
+exit to come-out from root
+
+Clear Screen or terminal on linux : CMD clear
+clear
+Ctrl+L
+
+UNIQUE CHARACTERS SECTION FEATURING TERMINAL CUSTOMIZATION AND HASH CHARACTER.
+====================================================================================================
+Special/unique charecter in bash has special meanings example: Characters Hash SemiColon.
+special built-in meanings
+
+# :- Comment liles.
+     how interpret shell.
+	 
+	 vim first.sh    
+	 vim is a text editor it will open the file if exists else creats.
+	 
+	 insert mode :  i or insert
+	 
+	 first line in the bash script
+	 
+	 #!/bin/bash  Please interpret this script as a bash script
+	 
+	 
+
+
+echo command prints the text on the screen.
+echo "Hi there how is it going what sort of day you are having?."  #this will print whatever to the screen.
+comments are completly ignored by system.
+
+escape
+:wq
+:q! quit without saving.
+
+./first.sh permission denied.
+ls -l   (no one has permission to execute)
+chmod +x first.sh
+
+
+Example: - echo "this is the example # blablabla"  here # is not interpreted as comment but
+Example: - echo "this is the example" # blablabla  here # blablabla is commented.
+or 
+Example: - echo this is the example # blablabla  the also # blablabla is commented.
+
+
+---------------------------------------------------------------------------------------------------
+#!/bin/bash
+
+name=tea
+echo "The word $name contains ${#name} charecters"
+---------------------------------------------------------------------------------------------------
+OUTPUT:-
+./first.sh 
+The word tea contains 3 charecters
+
+in this example # is not a comment but it returns the no of charecters in the given string.
+
+---------------------------------------------------------------------------------------------------
+
+Example: - # charecter used as a number system conversion. Binary to decimal 
+
+
+---------------------------------------------------------------------------------------------------
+#!/bin/bash
+
+echo $(( 2#101))   #binary to decimal
+echo $(( 8#101))   #octal  to decimal
+echo $(( 16#101))  #hex   to decimal
+---------------------------------------------------------------------------------------------------
+OUTPUT:-
+./first.sh 
+5 
+65
+257
+# binary/octal/hexadecimal  number converted as decimal value.
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+Special charecter ; is used to seperate commands in bash scripts.
+---------------------------------------------------------------------------------------------------
+Example:-
+echo "I am fine today";echo "I will be fine tomorrow as well"
+a=10
+if [ $a -gt 0 ]; then echo "Condition is True";else echo "False condition"; fi
+
+OUTPUT:
+./first.sh 
+I am fine today
+I will be fine tomorrow as well
+Condition is True
+
+
+colon is used as command seperator in a line.
+we can write multiple command in one line by sepearting the command using  ; 
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+Special charecter . is used to seperate commands in bash scripts.
+---------------------------------------------------------------------------------------------------
+cd .   here . means current directory.
+cd ..  means to go back to previous directory.
+
+ls -la  show hidden directory/files.
+.     
+.. 
+
+single . usage example  cp  sourcepath .  copy to current directory.
+
+----------------------------------------------------------------------------------------------------
+partial quoting double quotes:  ""   
+----------------------------------------------------------------------------------------------------
+Example for the special charecter ""  double quotes
+
+
+#!/bin/bash
+
+colors="read black yellow green white"
+#LOOP1
+echo "output of loop1"
+for col in $colors
+do
+	echo $col
+done
+
+#LOOP2
+echo "output of loop2"
+for col in "$colors"
+do
+	echo $col
+done
+
+----------------------------------------------------------------------------------------------------
+OUTPUT:
+
+./first.sh 
+output of loop1
+read
+black
+yellow
+green
+white
+output of loop2
+read black yellow green white  
+[ double quotes used in this example for "$colors" prevented word splitting. and used as a single
+  string ]
+                              
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Special Charecter:- single quotes  prevents all special charecters in a string litrally.
+                    it does not allow variable referencing at all.
+----------------------------------------------------------------------------------------------------
+Example:-
+
+#!/bin/bash
+
+colors="read black yellow green white"
+for col in '$colors'
+do
+	echo $col
+done
+
+OUTPUT:-
+./second.sh 
+$colors        
+
+This example printed the litral value and variables are not referenced.
+ignored all the special charecters in side the single quote.
+as is.
+----------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------
+Linux commands
+----------------------------------------------------------------------------------------------------
+
+Linux is case sensitive.
+
+cd     --> change working directory.
+pwd    --> present working directory.
+ls     --> list files/directory under a directory.
+let    --> is the command works on airthmetic operator.
+
+
+----------------------------------------------------------------------------------------------------
+Charecter:  comma seperator  ,
+----------------------------------------------------------------------------------------------------
+Example:
+
+			#!/bin/bash
+			
+			let "y=(( x=20,20/10))"
+			echo $y
+
+OUTPUT:
+./second.sh 
+2   
+
+comma returns the value of last 
+basically it links together a series some sort of airthmatic operations  they all will be evaluated 
+but only the last operation is actually gets returned.
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Charecter:  double comma
+----------------------------------------------------------------------------------------------------
+Example:
+
+			#!/bin/bash
+			
+			var=DSLCoNnEction
+			
+			echo ${var,}
+			echo ${var,,}
+
+
+OUTPUT:
+		./first.sh 
+		dSLCoNnEction     with single comma only first letter is converted to lower case.
+		dslconnection     with double comma complete strings are converted to lower case.
+
+
+Lower case letter conversion
+changes all charecters in a word to lowercase.
+
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Charecter:  Escap charecters or back slash  \
+----------------------------------------------------------------------------------------------------
+Example: Suppose we want output with quotes  Example print "Linux is awesome"
+
+			#!/bin/bash
+
+			echo "\"Linux is awesome\""
+
+OUTPUT:
+		"Linux is awesome"
+		
+		\ - ignores or escapes the quote from its special meanings.
+		
+Example2:
+
+ls --help | grep "\-U"
+                               use of --sort=none (-U) disables grouping
+      --sort=WORD            sort by WORD instead of name: none (-U), size (-S),
+  -U                         do not sort; list entries in directory order
+
+
+In this example backslash ignores the meanings of the arguments to grep and considers as a string 
+search -U  
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter:  forward slash  /
+----------------------------------------------------------------------------------------------------
+slash is also used when the tab is pressed and auto completion is done.
+Seperate the part of the filename.  cd /home/lakshmi/test/
+used to exeute the executable with ./ 
+airthmetic operation like divide : division
+
+example:-  let val=500/2
+           echo "$val"
+OUTPUT:
+			250
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Charecter:  back quote : `
+----------------------------------------------------------------------------------------------------
+It basically acts as a some sort of substitution for something.
+it takes the output of a command and it assigns to a variable.
+
+
+Example:-  echo date
+OUTPUT:
+           date
+
+Example
+			echo `echo date`
+OUTPUT:
+			Sat Feb 18 08:52:49 PST 2017
+			
+
+Example:
+			#!/bin/bash
+			let val=500/2
+			echo "$val"
+
+			val2=`echo "$val"`
+			echo $val2
+
+OUTPUT:
+			250
+			250		
+
+This will be useful to take the standard out and place it in a variable.			
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Charecter: colon :
+----------------------------------------------------------------------------------------------------
+Gnerally do nothing operation. do none.
+
+
+Example:
+			#!/bin/bash
+			var=200
+			if [ $var -gt 100 ]
+			then
+			   :
+			else
+				echo $var
+			fi
+
+OUTPUT:
+			
+nothing will be on the screen as the condition is passed and : is executed and did nothing.			
+
+
+colon can alse be using in conjection with the direction operator example to truncate file length.
+to zero if the file exists. or if does not exists it will create it.
+
+: > wood.txt   will empty the content of the file wood.txt as  do nothing is redirected to the file.
+
+but if the file does not exist it will create empty file wood.txt
+but if we have : >> then the file remains unchanged as we added nothing.
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Charecter: exclamation mark !
+----------------------------------------------------------------------------------------------------
+This charecter is used to nagate or reverse some sort of condition or expression or exist status.
+
+Example:-
+			#!/bin/bash
+			var=0
+			if [ "$var" != 0 ] 
+			then
+			   echo "NOT"
+			else
+			   echo "YES"
+			fi
+
+OUTPUT:
+			./first.sh 
+			YES
+
+	
+Used as not equal to  (negation check.)
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: wildcard *
+----------------------------------------------------------------------------------------------------
+Example:
+on the shell prompt
+			touch test1 test2 test3 test4 test5
+
+			now let's say we need to delete 100 + files starting with test/
+			rm -rf test*
+			all files with the charecters test and anything after that will be matched with * will 
+			be deleted.		
+
+whild card * is used to match everthing.
+
+* is also used in mathematical operation for multiplication.
+** is used as exponentiation   2 to the power 3  can be written as 2**3
+
+Example:
+			#!/bin/bash
+			let var=100*10
+			let var2=10**3
+			echo "$var $var2"
+
+OUTPUT:
+			./example.sh 
+			1000 1000
+
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: Question Mark ?  
+----------------------------------------------------------------------------------------------------
+This would be test operator.  Similar to ternary operator in C program.
+
+Example:-
+			#!/bin/bash
+			var1=10
+			echo $((var2 = var1 < 20 ? 1:0 ))
+			
+OUTPUT:-
+			./example.sh 
+			1
+			
+if var1 is less than 20 is true so the output is 1 else 0.
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: Parentheses ( )
+----------------------------------------------------------------------------------------------------
+It is used to group commands inside of them.
+It treats as subshell which script can not read.
+
+Example:-
+			#!/bin/bash
+			var=5
+			(var=10;)
+			echo $var
+
+			
+OUTPUT:
+			./example.sh 
+			5
+in this example (var=10;) is not interpreted to read by shell hence no change in the variable var=5
+
+() is also used for array initialization.
+  
+weekdays=(sunday monday tuesday wednesday thursday friday saturday)
+  
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: curly brackets {} or curly paranthesis
+----------------------------------------------------------------------------------------------------
+Examples :
+#!/bin/bash
+echo \${name,addrs,phone}\$
+echo \"{name,addrs,phone}\"
+
+OUTPUT
+./example.sh 
+$name$ $addrs$ $phone$
+"name" "addrs" "phone"
+
+using the flower bracket and escape charecters.
+
+
+Taking contents of multiple files and put in to one single file.
+cat command can be used to display the contents of the file.
+Ans:-   cat {test1.txt,test2.txt,test3.txt} > allinone.txt
+
+you can create a loop wihout a loop.
+
+echo {0..9}  this will print 0 1 2 3 4 5 6 7 8 9 without using any looping construct.
+
+curly braces can also be used to sepearting a piece of code. then can represent a block of code
+it will create a function.
+
+Example:-
+
+			#!/bin/bash
+
+			var1=1
+			var2=2
+
+			{
+			var1=10
+			var2=20
+			}
+
+			echo $var1 $var2
+			
+			
+OUTPUT:- 
+			./example.sh 
+			10 20
+
+here even though the variables are under the curly brace are visible to the script.
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: Logical or || 
+----------------------------------------------------------------------------------------------------
+Example:
+				#!/bin/bash
+				var=1
+				if [ "$var" -gt 0 ] || [ "$var" -eq 10 ]
+				then
+					echo "one of the condition is true"
+				else
+					echo "Both condition are false"
+				fi
+
+OUTPUT:
+			one of the condition is true
+used to combine 2 or more condition , if any one is true it will yeild true.
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: Logical and operation : && 
+----------------------------------------------------------------------------------------------------
+Example:-
+				#!/bin/bash
+				var=1
+				if [ "$var" -gt 0 ] && [ "$var" -eq 10 ]
+				then
+					echo "Both conditions are true"
+				else
+					echo "One or more condition are false"
+				fi
+OUTPUT
+				./example.sh 
+				One or more condition are false
+
+And logic is if all conditions returns True then if part will be executed, if any condition fails
+else part will be executed.
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter:  - (single - charecter) 
+----------------------------------------------------------------------------------------------------
+This charecter is used for optional prefix 
+used as in option in some command.
+arguments passed to some function.
+-eq -lt -eq  
+redirection standard input or output.
+It can be used as minus sign or airthmetic involving subtraction.
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter:  - + % / *  are all airthmetic operators.
+----------------------------------------------------------------------------------------------------
+Modulus opeartor example
+#!/bin/bash
+let var=5/4
+echo $var
+
+OUTPUT
+1
+
+Modulo operator gives the remainder of a division.
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+Charecter: Tilda  ~  or home directory.
+----------------------------------------------------------------------------------------------------
+This is the shortcut used to go switch to the home directory of a current user.
+it will take to home directory of a current user.
+
+Example:
+Command line type :     # cd ~
+                        # pwd
+						
+root@ubuntu:~/lakshmi/scrips# pwd
+/home/girish/lakshmi/scrips
+root@ubuntu:~/lakshmi/scrips# cd ~
+root@ubuntu:~# pwd
+/home/girish
+root@ubuntu:~# 
+
+
+~+ : current working directory 
+~- : previous directory.
+Example
+root@ubuntu:~/lakshmi/scrips# pwd
+/home/girish/lakshmi/scrips
+root@ubuntu:~/lakshmi/scrips# echo ~+
+/home/girish/lakshmi/scrips
+root@ubuntu:~/lakshmi/scrips# echo ~-
+/home/girish
+root@ubuntu:~/lakshmi/scrips# 
+----------------------------------------------------------------------------------------------------
+charecter: ^
+----------------------------------------------------------------------------------------------------
+This is used  in upper case conversion.
+
+Example:
+#!/bin/bash
+var=inDian
+echo ${var^}
+echo ${var^^}
+
+OUTPUT
+./example.sh 
+InDian
+INDIAN
+
+^ charecter used here converts the first letter to uppercase
+^^ used here converts all case to uppper case. 
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+BASH VARIABLES AND PARAMETERS IN BASH
+----------------------------------------------------------------------------------------------------
+Variables are some sort labels or names to represent certain values or sets of values to computers 
+memory.
+airthmatic operation
+string phrasing
+name of the variables are not same as the value of the variable.
+Example:-
+		#!/bin/bash
+		var=10
+		echo var
+		echo $var
+
+OUTPUT
+		./example.sh 
+		var
+		10
+
+
+Doller sign is not needed for assigning value to the variable during declaration.
+
+Example
+		#!/bin/bash
+		var=10
+		unset var
+		echo var
+		echo $var
+
+OUTPUT
+		./example.sh 
+		var
+
+
+unset command assigned value of the variable to none.
+
+
+Example:
+
+#!/bin/bash
+var1=10
+((var2=var1<10?1:0))
+echo $var2
+
+OUTPUT
+./example.sh 
+0
+in this example doller sign prefix to the variable is not needed.
+Example2
+#!/bin/bash
+var1=10
+((var2=var1))
+echo $var2
+OUTPUT
+./example.sh 
+10
+in this example doller sign prefix to the variable is not needed.
+
+
+Assigning value to the variable using the standard input with read command.
+
+Example:-
+			#!/bin/bash
+			echo "Enter some value"
+			read var1
+			echo "You have entered : $var1"
+OUTPUT
+			./example.sh 
+			Enter some value
+			Welcome
+			You have entered : Welcome
+
+Assigning a list of values to the variable used in a loop.
+
+Example:
+			#!/bin/bash
+			for var in 1 2 3 4 5
+			do
+			echo $var
+			done
+
+OUTPUT
+			1
+			2
+			3
+			4
+			5
+
+The variable var gets the value 1 2 3 4 5 during each iteration of the for loop.
+for var in 1 2 3 4 5 can be simplied as  for var in {1..5}
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+RETURN VALUES.
+----------------------------------------------------------------------------------------------------
+When the script is executed we should know the result of the script execution is sucessful or not.
+exit status.  error message.
+exist status can be obtained from :  $?  it is the status of the last executed command.
+exit status of the last commad that is executed in a script.
+
+Example for $?
+		#!/bin/bash
+		echo "This is the example"
+		echo Return value: $?
+		echo "Creating error condition"
+		abdhdhdhdhd
+		echo return value is: $?
+OUTPUT
+This is the example
+Return value: 0
+Creating error condition
+./example.sh: line 6: abdhdhdhdhd: command not found
+return value is: 127
+
+if the command exeuction is sucessful then $? will return 0 if failed it will return positive integer
+value in this case 127
+127 is the value of the exist value.
+
+$# - gives the number of commandline arguments passed to a script.
+$0 - gives the name of the script.
+basename -> removes the prefix to the filename path.
+
+Example
+
+			#!/bin/bash
+			NO_OF_ARGS=2
+			E_BADARGS=85
+			E_UNREADABLE=86
+			if [ $# -ne "$NO_OF_ARGS" ]
+			then
+			   echo "Usage ` basename $0` testfile1 testfile2"
+			   exit $E_BADARGS
+			fi
+
+OUTPUT
+Usage example.sh testfile1 testfile2
+echo $?
+85
+here 85 is the value for the bad arguments.
+
+in this example basename $0 gives the name of the script file executing.
+-r will retuen true if the user running the test has the permission to read the file.
+   file exists and redable
+-e tests if the file is exists at all.
+-f tests if the regular file exists not a directory.
+-s file exists not a zero size file.
+-w will return true if the user running the test has the permission to write the file.
+-x will return true if the user running the test has the permission to execue.
+! reverses the result of the file test operation
+nested if statemnt in shell
+
+$$ will give the process id of the script.
+
+----------------------------------------------------------------------------------------------------
+File test opeartors
+----------------------------------------------------------------------------------------------------
+variables can hold path.
+Example: To check the existance of a file.
+		#!/bin/bash
+		var=/home/girish/lakshmi/scrips/wood.txt
+		if [[ -e $var ]]
+		then
+			echo "File exists"
+		else
+			echo "File does not exists!" 
+		fi 
+
+
+Example:  double parantheses.  ((..))
+          if the result of an airthmetic expression is zero then the exit status is 1 or false
+		  if the result of an airthmatic expression is not zero then the exit status is 0 or true
+		  
+			#!/bin/bash
+			((2>1))
+			echo Exit status: $?
+			(( 2<1 ))
+			echo Exit status: $?
+			
+OUTPUT
+			./example.sh 
+			Exit status: 0
+			Exit status: 1 
+
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+BUILT IN VARIABLES
+----------------------------------------------------------------------------------------------------
+echo $BASH
+/bin/bash    
+$BASH  gives the path of the bash program.
+$BASH_VERSION  gives the current version of the bash program.
+$PATH : gives series of path mentioned with the seperation of colon
+$CDPATH
+UID  user real id number. it is read only.
+EUID Effective user id , it can be same as UID but not necessarliy the same.
+ROOT_UID : root user will have the UID as 0 by default.
+
+Example: To print the processid of the current script.
+				#!/bin/bash
+				echo Processid: $$
+OUTPUT
+				./example.sh 
+				Processid: 9114
+
+htop  command will give the list of process details currently running.
+      [ sudo apt-get install htop ]
+	  it gives graphical view of the various process running.
+top    				
+Enter top on the bash shell and press q to quit.
+
+echo $BASH_VERSION     OUTPUT: 4.3.46(1)-release
+
+Example: $BASH_VERINFO
+
+			#!/bin/bash
+			for i in {0..5}
+			do
+			echo "BASH_INFO[$i]=${BASH_VERSINFO[$i]}"
+			done
+OUTPUT
+			BASH_INFO[0]=4
+			BASH_INFO[1]=3
+			BASH_INFO[2]=46
+			BASH_INFO[3]=1
+			BASH_INFO[4]=release
+			BASH_INFO[5]=i686-pc-linux-gnu
+
+echo ${BASH_VERSINFO[@]}  will display the complete array.
+4 3 46 1 release i686-pc-linux-gnu
+
+echo $PATH
+/home/girish/bin:/home/girish/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin        
+echo -n means print on the same line and not go to second line.
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+SIMPLE FUNCTION
+----------------------------------------------------------------------------------------------------
+$FUNCNAME  varable inside the function gives the name of the function.
+           Only works inside the function and not meant for outside.
+Example:
+				#!/bin/bash
+				somefunction()
+				{
+				  echo "Some function is:($FUNCNAME)"
+				}
+				somefunction
+				echo "Outside ,\$FUNCNAME = $FUNCNAME"
+OUTPUT
+				Some function is:(somefunction)
+				Outside ,$FUNCNAME = 
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+LOOPS
+----------------------------------------------------------------------------------------------------
+There are certain constructs which iterate certain times and does some sort of actions untill 
+
+They are basically constructs repeat some sort of actions for a certain number of iterations that 
+number of interation is usually defined some sort of a condition and  as long as that condition is true
+itreates through list of commands executed.
+
+we have three different loop construts in bash i.e 
+for     loop
+while   loop
+until   loop
+
+Also controlling loop through break and control command.
+case and select construct.
+which control the flow of commands execution.
+
+Nested for loop : first innner most loop will be finished and then our loop will be executed.
+
+
+IO Commands in bash
+
+echo
+read
+printf - universal way outputting to standard console , these are used in programming language.
+         can be applied very much almost all the program.
+
+declare - declaring a variable.
+example :- declare -r PI=3.14
+Exammple:- declare and printf in bash
+
+			#!/bin/bash
+			declare -r PI=3.14
+			printf "Second decimal of PI is : %2.6f\n", $PI
+OUTPUT
+			./example.sh 
+			Second decimal of PI is : 3.140000	 
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+REGULAR EXPRESSIONS
+----------------------------------------------------------------------------------------------------
+strings of charecters , charecters themself have the litral meanings, purpose of regular expression 
+are search text.
+
+grep
+awk
+
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
