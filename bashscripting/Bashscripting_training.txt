@@ -778,6 +778,11 @@ UID  user real id number. it is read only.
 EUID Effective user id , it can be same as UID but not necessarliy the same.
 ROOT_UID : root user will have the UID as 0 by default.
 
+Fedora starts its numbering of regular user accounts at 500, while Ubuntu starts at 1000
+
+
+
+
 Example: To print the processid of the current script.
 				#!/bin/bash
 				echo Processid: $$
@@ -819,7 +824,7 @@ echo -n means print on the same line and not go to second line.
 ----------------------------------------------------------------------------------------------------
 SIMPLE FUNCTION
 ----------------------------------------------------------------------------------------------------
-$FUNCNAME  varable inside the function gives the name of the function.
+$FUNCNAME   is the inbuilt environment varable inside the user defined function gives the name of the function.
            Only works inside the function and not meant for outside.
 Example:
 				#!/bin/bash
@@ -879,7 +884,6 @@ REGULAR EXPRESSIONS
 ----------------------------------------------------------------------------------------------------
 strings of charecters , charecters themself have the litral meanings, purpose of regular expression 
 are search text.
-
 grep
 awk
 
