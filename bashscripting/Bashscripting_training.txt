@@ -878,20 +878,533 @@ OUTPUT
 			./example.sh 
 			Second decimal of PI is : 3.140000	 
 
+			
+Example:
+			#!/bin/bash
+			a=10
+			b=25
+			c=18
+			printf "a=%d b=%d c=%6.2f\n" $a $b $c
+
+OUTPUT
+			./example.sh
+			a=10 b=25 c= 18.00			
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 REGULAR EXPRESSIONS
 ----------------------------------------------------------------------------------------------------
-strings of charecters , charecters themself have the litral meanings, purpose of regular expression 
-are search text.
-grep
-awk
+strings of characters , characters them self have the literal meanings, purpose of regular expression 
+are search or manipulate text.
+grep sed awk  commands are used to search texts and manipulate strings.
+
+Input output redirections.
+
+Files that are open by default are standard input / output /error files.
+stdin  : read from the standard screen with file descriptor 0
+stdout : display messages on the standard screen with file descriptor 1
+stderr : display standard error messages on the standard screen with file descriptor 2
 
 
+Redirection:   
 
+standard input only redirection   1>test1.txt
+standard output only redirection   2>test2.txt
+standard error  only redirection   3>test3.txt
+
+redirect standard output and error message as :  
+build.sh > log.txt  2>&1
 
 
 ----------------------------------------------------------------------------------------------------
+ADVANCED REDIRECTION EXAMPLE
+----------------------------------------------------------------------------------------------------
+#!/bin/bash
+echo 12345 > fd.txt
+exec 3<>fd.txt
+read -n 2 <&3
+echo -n . >&3
+exec 3>&-
+cat fd.txt
+----------------------------------------------------------------------------------------------------
+Explanation:-
+
+echo 12345 > fd.txt  ->  we echo out 12345 and redirect in to a file fd.txt
+exec 3<>fd.txt       ->  we open a file descriptor 3 and assign it to fd.txt
+						open the fd.txt and assign a file descriptor  3 to it.						
+read -n 2 <&3        -> we read only 2 characters from the file  
+echo -n . >&3        -> we write a decimal point there.
+exec 3>&-            -> we close the file descriptor fd3.
+cat fd.txt           -> read the content of the file fd.txt
+
+Reading 2 charecters from a file :  read -n 2 line < fd.txt
+Reading file 
+
+while read line; do echo $line; done < fd.txt
+----------------------------------------------------------------------------------------------------
+
+sudo su   # This command can be used in ubunto to login as super user.
+
+----------------------------------------------------------------------------------------------------
+*  READING A FILE LINE BY LINE USING THE FILE DESCRIPTOR.
+----------------------------------------------------------------------------------------------------
+exec 1000<>fd.xt
+----------------------------------------------------------------------------------------------------
+
+
+Functions:
+Functions are very important chapter to larn, functions are something which you will commonly write and
+
+Syntax:--
+
+function_name ( )
+{
+ 
+ some set of commands to execute.
+ 
+}
+
+Function can also be written in a single line, in this case all commands inside the function needs to be 
+sepeated by a semicolon.
+
+function_name ( ) { command1;command2;command3;etc}
+
+calling function in the example.  
+note:- function must be defined before it is called.
+       functions cannot be empty, however it can have 
+       functions can be nested.but the function call should be the in the order for function defined.
+       function name can be anything.
+
+Empty function like below is not allowed.
+function_name()
+{
+
+}
+however function can have no operation command i.e colon as below.
+function_name()
+{
+  :
+}
+
+----------------------------------------------------------------------------------------------------
+Nested function example
+----------------------------------------------------------------------------------------------------
+#!/bin/bash
+
+function1()
+{
+  echo "This is function:1"
+  function2()
+  {
+    echo "This is function:2"
+  }
+}
+function1     # must be called in the order it is nested.
+function2
+----------------------------------------------------------------------------------------------------
+function can have any name.
+----------------------------------------------------------------------------------------------------
+#!/bin/bash
+_()
+{
+  echo "Beging function: $FUNCNAME"
+
+}
+#calling function
+_
+
+OUTPUT:
+Beging function: _
+----------------------------------------------------------------------------------------------------
+We can pass arguments to functions
+value of arguments are assigned based on the position $1 $2 up to $9
+----------------------------------------------------------------------------------------------------
+#!/bin/bash
+fun()
+{
+  echo "arg1=$1 arg2=$2"
+}
+var1=1
+var2=100
+fun $var1 $var2
+
+OUTPUT:
+arg1=1 arg2=100
+
+note: in the function fun if you echo as echo "arg1=$3 arg2=$4"  Result will be empty becase of the
+order of assignment is important.
+----------------------------------------------------------------------------------------------------
+Arrays.
+----------------------------------------------------------------------------------------------------
+Vi editor command
+escape colon set number
+escape colon set nonumber
+delete range of lines:
+escape colon 2,6d         # this command will delete lines from 2 to 6
+escape colon 2,$d         # this command will delete lines from 2 to end of the file 
+                          # $ takes the end of line.
+----------------------------------------------------------------------------------------------------
+for i in {0..100}; do echo "$i" >> example.sh ; done
+----------------------------------------------------------------------------------------------------
+
+#!/bin/bash
+arr[0]=20
+arr[1]=30
+echo -e "Array Elements ${arr[0]}"
+echo -e "Array Elements ${arr[1]}"
+
+OUTPUT:
+Array Elements 20
+Array Elements 30
+
+Array can be declared using declare keyword.
+array initialization.
+
+
+#!/bin/bash
+a=something123
+echo ${a[0]}
+echo ${a[*]}
+echo ${a[1]}
+echo ${#a[@]}
+
+OUTPUT:
+something123
+something123
+
+1
+
+
+${a[*]}       ===> This will list out all elements in an array.
+echo ${a[0]}  ===> This will list the first element of the array  
+${#a[@]}      ===> This will print the no of elements in the array  size of the array.
+
+
+
+#!/bin/bash
+arr=( zero one two )
+echo ${arr[0]}
+echo ${#arr[0]}
+echo ${#arr[*]}
+echo ${#arr[@]}
+
+zero
+4
+3
+3
+
+---------------------------------------------------------------------------------------------------
+Lists 
+and and or list constructs
+&&   And list
+||   or list
+
+expression1 && expression2   --->>  expression2 will be executed only if the expression1 returns True.
+expression1 || expression2   --->>  expression2 will be executed if the expression1 returns False.
+
+---------------------------------------------------------------------------------------------------
+Debuging scripts.
+---------------------------------------------------------------------------------------------------
+sh -n <script name> does not run the script but checks the syntax of the script.
+sh -v <script name>  verbose option for debugging.
+sh -x <script name>  
+
+
+Exammple:
+
+#!/bin/bash
+rm abc 2>/dev/null || echo "Error in $LINENO"
+for i in 1 2 3
+do
+done
+
+OUTPUT:-
+Error in 2
+./example.sh: line 5: syntax error near unexpected token `done'
+./example.sh: line 5: `done'
+
+or 
+
+sh -n example.sh
+example.sh: line 5: syntax error near unexpected token `done'
+example.sh: line 5: `done'
+
+This command does not execute the script but checks the syntax error.
+
+
+Exammple for verbose option.
+
+sh -v example.sh
+#!/bin/bash
+rm abc 2>/dev/null || echo "Error in $LINENO"
+Error in 2
+for i in 1 2 3
+do
+done
+example.sh: line 5: syntax error near unexpected token `done'
+example.sh: line 5: `done'
+
+
+set -v can also be added inside the script.
+
+Exammple:
+
+#!/bin/bash
+set -v
+rm abc 2>/dev/null || echo "Error in $LINENO"
+for i in 1 2 3
+do
+done
+
+OUTPUT:
+
+./example.sh
+rm abc 2>/dev/null || echo "Error in $LINENO"
+Error in 3
+for i in 1 2 3
+do
+done
+./example.sh: line 6: syntax error near unexpected token `done'
+./example.sh: line 6: `done'
+
+
+similarly -x can also be used for debugging the script for logical and syntax error.
+
+---------------------------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=l0QGLMwR-lY
+ 
+https://www.youtube.com/watch?v=IngllNs1pCU
+https://www.youtube.com/watch?v=6hAeBJvAM2A
+https://www.youtube.com/watch?v=dOCqHJ1i_Jw
+https://www.youtube.com/watch?v=Aloc9UdhsC4
+
+https://www.youtube.com/watch?v=bju_FdCo42w&list=PLtK75qxsQaMLZSo7KL-PmiRarU7hrpnwK
+
+---------------------------------------------------------------------------------------------------
+Q:  how will you know which kernel version is currently running on the linux system ?
+A:  command  uname gives the information.
+    uname -a 
+	
+Q:  how can you check a system's current IP address ?
+    Command ifconfig gives the information about the IP address.	
+	[loop back device, ethernet device]
+	
+	ifconfig
+	ip addr show
+
+
+Q: how do you check for free disk space?
+   df -a
+   df -ah  human redable format.
+   
+   
+Q: how do you manage services on a system?
+   service command
+   ex: service udev status
+   or systemd
+   systemctl  status servicename
+   
+   
+Q: how would you check the size of a directory's contents on  disk?
+   du -sh   disk usage command.
+
+   
+Q: how would you check open ports on a linux machine?
+   netstat 
+   
+   sudo netstat -tulpn
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:2049            0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:55049           0.0.0.0:*               LISTEN      5649/rpc.mountd
+tcp        0      0 0.0.0.0:139             0.0.0.0:*               LISTEN      5697/smbd
+tcp        0      0 0.0.0.0:59630           0.0.0.0:*               LISTEN      4905/rpc.statd
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      4886/portmap
+tcp        0      0 0.0.0.0:35764           0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      5484/sshd
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      5568/cupsd
+tcp        0      0 0.0.0.0:445             0.0.0.0:*               LISTEN      5697/smbd
+tcp6       0      0 :::22                   :::*                    LISTEN      5484/sshd
+udp        0      0 0.0.0.0:2049            0.0.0.0:*                           -
+udp        0      0 15.213.119.76:137       0.0.0.0:*                           5695/nmbd
+udp        0      0 0.0.0.0:137             0.0.0.0:*                           5695/nmbd
+udp        0      0 15.213.119.76:138       0.0.0.0:*                           5695/nmbd
+udp        0      0 0.0.0.0:138             0.0.0.0:*                           5695/nmbd
+udp        0      0 0.0.0.0:35874           0.0.0.0:*                           4905/rpc.statd
+udp        0      0 0.0.0.0:841             0.0.0.0:*                           4905/rpc.statd
+udp        0      0 0.0.0.0:46168           0.0.0.0:*                           -
+udp        0      0 0.0.0.0:5353            0.0.0.0:*                           5529/avahi-daemon:
+udp        0      0 0.0.0.0:38762           0.0.0.0:*                           5649/rpc.mountd
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           4886/portmap
+udp        0      0 0.0.0.0:44913           0.0.0.0:*                           5529/avahi-daemon:
+
+
+Q: How do you check cpu usage for a process?   
+   
+   ps aux | grep "name of the process" 
+   Learn pipe basics.
+   top 
+   htop  - gives graphical representaion.
+   
+   
+Q: Dealing with mounting.
+   ls /mnt/
+   mount "mount address" "mount point"
+   check the existing mount 
+   mount
+   /etc/fstab  contains the entry of mounted devices.
+   
+	# /etc/fstab: static file system information.
+	#
+	# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+	proc            /proc           proc    defaults        0       0
+	# /dev/sda1
+	UUID=e8d5bb05-3e5f-4302-b8c7-307acf7dfcf8 /               ext3    relatime,errors=remount-ro 0       1
+	# /dev/sda5
+	UUID=75731b2f-287b-49fe-8af1-81aa11d8b044 none  swap    sw         0       0
+	#/dev/sda5  none  swap  sw  0  0
+	#/dev/scd1       /media/cdrom0   udf,iso9660 user,noauto,exec,utf8 0       0
+	#/dev/scd0       /media/cdrom1   udf,iso9660 user,noauto,exec,utf8 0       0
+	#/dev/fd0        /media/floppy0  auto    rw,user,noauto,exec,utf8 0       0
+
+   
+Q: How do you look up something you don't know?
+   man pages  : manual pages.
+   man <command name>
+   google
+   stack overflow.   
+   
+   lsof   
+   List open files.
+   it gives list of all open files.
+   
+   look host
+   netstat -tupln     
+   curl localhost  
+   which process has file open ?
+   lsof /var/log/daemon.log
+   COMMAND  PID   USER   FD   TYPE DEVICE SIZE   NODE NAME
+   syslogd 5338 syslog    4w   REG    8,1    0 380346 /var/log/daemon.log
+   
+   Find all files that a process had opened?
+   lsof -p < process id >
+   lsof -p 27513
+   
+   /dev/null
+   /dev/zero
+   
+   where is the binary for process X?
+   lsof -p < process id > | grep bin
+   
+   which shared libraries has process X opened?
+   lsof -p < process id > | grep .so
+   
+   lsof -p 27513 | grep .so | awk '{print $9}' | while read line;do basename $line; done
+   lsof -p 27513 | grep bin | awk '{print $9}' | while read line;do echo $line; done
+   lsof -p 27513 | grep .so | awk '{print $9}' | while read line;do echo $line; done
+   
+   which file is process x logging to ?
+   
+   lsof <library name>   To know more about the service status of the lib any hang etc.
+   
+   which files does user x has open?
+   lsof -u <username> 
+   lsof -u tbmbuild
+
+   which process is listening on port X ( or using protocol Y) ?
+   ls -i
+   ls -i :80
+   
+   
+   lsof -i tcp   
+   lsof -i udp   
+
+   
+   
+---------------------------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=k4Ww6gFeF0M
+---------------------------------------------------------------------------------------------------
+standard shell is sh  [ borne shell or bash shell]
+bash shell is the default shell in the system.
+command to get the current shell:   echo $0
+
+Changing the shell.  (Bourne Shell, C shell, Korne shell  )
+Exexution command is sh.
+how to change the shell to kshel.
+ksh  
+exit is the command to be used to go back to the previous shell.
+bash prompt is $
+bash prompt syntax is sh.  (standard shell)
+
+Shell script is nothing but collection of unix commands 
+collection of bash commands bash shell
+collection of dos commands does shell
+collection of windows commands windows shell
+collection of Linux commands Linux shell
+collection of unix commands unix shell 
+
+C   shell prompt % and execution Csh
+K   shell prompt $          
+
+
+system defined variables
+User   defined variables
+
+Script means weakly or loosely types programming   interpretr based 
+programing languages are stricly typed programing syntax based. compiler based. 
+
+export needs to be used to declare variable so that the variable is available to all the shells (bash,csh,ksh)
+export is the key word used to make the global scope.
+Unix is case sensitive operating system.
+Environment variables in unix/linux
+HOME
+LOGNAME
+USER
+PS1           Primary prompt
+PS2           Primary prompt
+---------------------------------------------------------------------------------------------------    
+Shell scripts are interactive and not interactive.   
+---------------------------------------------------------------------------------------------------    
+https://www.youtube.com/watch?v=-GnLLXPjLN4
+
+
+
+
+
+---------------------------------------------------------------------------------------------------    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
