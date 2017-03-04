@@ -1405,7 +1405,7 @@ help help
 
 do done
 while until for select
-if case 
+if case
 
 Command Groups 
       Grouped list of commands, sharing any external redirections and whose return value is that of the list.
@@ -1436,29 +1436,550 @@ i=0;
 j=20
 until [ $i -eq "$j" ]; do echo $i; let i=$i+1; done
 
-c style for loop
+c style for loop example
+
+Syntax:
+-------
+for (( expr1; expr2; expr3 )); do <list>; done
+Here
+     expr1 - Initialization.
+	 expr2 - Condition
+	 expr3 - Increment/decrement.
+
 j=20
 for (( i=0;i<j;i++)); do echo $i; done
 
-select loop  : specifically to get the user input.
-can be used to build some kind of menu system.
+select loop  : specifically to get the user input.can be used to build some kind of menu system.
 
+
+for loop syntax: 	
+
+for <name> in <words>; do <list>;done 
+Example:-
+
+for i in red green yellow; do echo $i;done
+<name> = i
+<words> = red green yellow
+<list> = echo $i
+
+OUTPUT:-
+$ for i in red green yellow; do echo $i;done
+red
+green
+yellow
+
+
+for loop is extremely useful can be used with files and directories.
+
+
+SELECT LOOP
+
+select <name> in <words>;do <list>;done;
+This loop creates menu item for each <word> 
+Each time the user makes a selection from menu, name is assigned 
+the value of the selected word and REPLY is assigned the index number 
+of the selection.
+ 
+Example:-
+#!/bin/bash
+echo "Example for Select construct in Bash"
+select menuopt in create insert update delete distroy quit;
+do
+    if [ "$menuopt" == "quit" ]; then
+       echo "Exiting from main menu"
+       exit
+    elif [ "$menuopt" == "create" ]; then
+       echo "Creating Database"
+    elif [ "$menuopt" == "distroy" ]; then
+       echo "distroy database"
+    elif [ "$menuopt" == "insert" ]; then
+       echo "inserting in to database"
+    elif [ "$menuopt" == "delete" ]; then
+       echo "delete database"
+    fi
+done
+
+OUTPUT:
+
+./exsel.sh 
+Example for Select construct in Bash
+1) create
+2) insert
+3) update
+4) delete
+5) distroy
+6) quit
+#? 6
+Exiting from main menu
+ 
 ======================================================================================
 									TESTS
 ======================================================================================
+Evaluate conditional expression with the test builtin.
+[Expression] or test
 
-
-
+[[expression]]
+  Evaluate conditional expression with the [[ keyword; word splitting is not performed.
+  The right handside side of a string comparision ( == != )  is treated as pattern not quoted
+  and a string when quoted.
+  
+  [[-n string ]]  string is non-empty.
+  [[-z string ]]  string is empty
+  [[ string1 == string2 ]]  string1 and string2 are the same
+  [[ string1 != string2 ]]  string1 and string2 are not the same
+  [[ string =~ regex ]] string matches the regular expression.
+  [[ -f file ]]     file exists and file is a regular file.
+  [[ -e file ]]  file exists 
+  [[ -d file ]]  file is a directory.
+  [[ -t fd  ]] fd is open and refers to a terminal
+  
+  
+  
+The test operator shown above can be used in if constructs.
 
 ======================================================================================
+PATTERN MATCHING.
+======================================================================================
+Pattern matching is used in bash for the [[ and case keywords , path expansion and some types of
+parameter expansion
+
+*   matches strings including null.
+?   matches any single charecter.
+[charecter class] Matches any one of the charecters enclosed between [ and ].
+
+[^]    matches complement (any charecter not in the class)
+[x-z]  matches range of charecters from x to z
+[[:class:]] matches according these to  POSIX classes.
+
+alnum alpha ascii blank cntrl digit graph lower print punct space
+
+
+
+Conditional Case
+
+case <word> in 
+    pattern1 )
+	    list1;;
+				
+    pattern2 )
+	    list2;;
+		
+	pattern3 | pattern4 )
+	    list3;;
+esac
+	
+
+Match <word> against each pattern sequentially When first match is found evaluate the list corresponding
+to that match and stop matching.
+| ( pipe ) charecter between two patterns entails a match if either pattern matches.( OR ). 
+
+
+Example:-
+
+#!/bin/bash
+
+echo "Example for Select construct in Bash"
+select menuopt in create insert update delete distroy quit;
+do
+    case $menuopt in
+        
+         quit ) echo "Exiting..."
+                exit ;; 
+          create ) echo "create" ;;
+          insert ) echo "insert" ;;
+          update ) echo "update" ;;
+          delete ) echo "delete" ;;
+          distroy) echo "distroy" ;;
+     esac
+done
+======================================================================================
+COMMAND GROUPS.
+======================================================================================
+Subshell:
+Evaluate list of commands in a subshell, meaning that its environment is disctinct from the current
+shell and its parameters are contained.
+(list) <---- subshell 
+
+Group command:
+Evaluate list of commands in the current shell sharing the current shell's environment.
+{ list; }  the spaces and trailing colon are obligatory.
+
+Example:- subshell
+
+x=2000; y=3000; ( x=10; y=20; echo "IN:x=$x y=$y"; ); echo "OUT:x=$x y=$y";
+
+OUTPUT:
+$ x=2000; y=3000; ( x=10; y=20; echo "IN:x=$x y=$y"; ); echo "OUT:x=$x y=$y";
+IN:x=10 y=20
+OUT:x=2000 y=3000
+
+Running on the subshel so environment of subshell will be lost when the secession is closed.
+
+Example:- Group commands.
+x=2000; y=3000; { x=10; y=20; echo "IN:x=$x y=$y"; }; echo "OUT:x=$x y=$y";
+OUTPUT:
+$ x=2000; y=3000; { x=10; y=20; echo "IN:x=$x y=$y"; }; echo "OUT:x=$x y=$y";
+IN:x=10 y=20
+OUT:x=10 y=20
+Running on the same shell so the environment is preserved.
+
+======================================================================================
+Example:-
+
+( echo a; echo b ) | sort 
+
+This command works becasue concatinating in sequence runs in that subshel.
+
+$ echo "$(echo "$(ps wwf -s $$)")"
+  PID TTY      STAT   TIME COMMAND
+ 5237 pts/4    Ss+    0:04 bash
+ 7480 pts/4    S+     0:00  \_ bash
+ 7481 pts/4    S+     0:00      \_ bash
+ 7482 pts/4    R+     0:00          \_ ps wwf -s 5237
+
+ creates sub shell.
+ $(command) -> execue command in a sushell.
+ 
+ echo "$(</etc/os-release)"
+ 
+===================================================================================================
+REDIRECTION:
+Controlling input,output,error and other streams.
+
+list > file Overwrite/create file with output from list.
+list >> file Append/create file with output from list.
+list < file Feed file to list as input.
+
+list1 | list2 Use output from list1 as input to list2 
+
+if not specified the file descriptor (fd) then fd=1 (STDOUT) is assumed when redirecting output.
+Aleternaive file desciptors may be specified by prepending the fd <number> eg 2>file to redirect 
+fd 2 (STDERR)
+
+To redirect to a file descriptor, append & and the fd number example 2>&1 to redirect STDERR to the
+current target for STDOUT.
+  
+===================================================================================================
+COMMAND AND PROCESS SUBSTITUTION
+===================================================================================================
+Command substitution:
+        Replace the command substitution in-line with the output of its subshell.
+		
+		$(list)
+		
+Process substitution:
+        Replace the process substitution with a file descriptor which is connected to the input or
+		output of the subshell.
+		
+		>(list)     <(list)
+		
+		
+		
+===================================================================================================
+PARAMETERS
+===================================================================================================		
+Positional parameters : $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10}...
+           parameters passed to command, encapsulating words on the command line as arguments.
+		   
+		   
+Special Parameters:
+           $* $@ $# $- $$ $0 $? $_ $!
+		   parameters providing information about positional parameters,the current shell, and the
+		   previous command.
+		   
+		   
+Variables
+                    name=string
+    Parameters which may be assigned values by the user. there are also some special shell variables 
+	which may provide information, toggle shell options, or configure certain features.
+	          for variable assignment  = must not have adjacent spaces.
+			  
+			  
+		
+Iterator example:-		
+echo \${1..9}         ->  $1 $2 $3 $4 $5 $6 $7 $8 $9
+echo {10..20..1}      ->  10 11 12 13 14 15 16 17 18 19 20
+echo {10..20..2}      ->  10 12 14 16 18 20
+echo {a..z..3}        ->  a d g j m p s v y
+
+	
+		
+		
+		
+====================================================================================================
+SHELL SCRIPTING BASICS.		
+====================================================================================================
+BASIC COMMANDS
+1. pwd
+2. cd 
+3. mkdir
+4. cal 
+   cal 2017
+   cal jul 2017
+
+5. date  command display the current date,time and timezone.
+   $ date               --->  Sat Mar  4 05:56:13 PST 2017
+   date custom command example:
+   $ date '+%d-%m-%y'   --->  04-03-17
+   $ date '+%H:%M:%y'   --->  05:56:17
+ 
+6. touch command is used to create an empty text file. 
+   touch file1.txt file2.txt file3.txt
+   
+   Quickway to create 100 empty text files 
+   touch Empty_{1..100}.txt
+   
+7 cat command is used to create a text file , read and merge.
+    
+	 a) creating file.
+	    cat > file1.txt
+		<Enter some texts>
+		Press control + D    (End of document.  comes back to shell prompt)
+		
+	 b)  cat < file1.txt to read the contents of the file.	
+	     < symbol is not mandatory to read the file , file can be simply read using cat command as
+		 cat filename.
+		 
+	 c)  merge 2 or more files using cat command as 
+	 
+	   cat file1 file2 .... fileN > mergedfile
+	   
+	   
+8.  Rename Files & Directories : mv 
+    mv source target 
+9.  Delete Files & Directories : rm 
+    rm -rvf file/directory  (recursively remove.)
+	    v- verbose
+		
+	 rmdir <dirname>  also removes the directory specified.
+
+10. copy files
+    cp command is used to copy files from one location to another.
+	cp source target.
+	cp -r source target can copy complete directory recursively from source to target.
+
+11. creating links
+    soft link and hard links.
+	ln command is used to create links.
+	 
+	creating hard link : replica of file/directory.
+	ln oldfile newfile 
+	
+	soft link or symbolic lync. reference to the physical files/directroy.	
+	ln -S file  linktofile
+	
+   
+12. File permissions.
+    Owner
+	Group
+	Others-user
+	
+	Read Write Execute-as program.    
+	Default best value for a file is : 6  read and write.  [ 0-1-1 - Execute Write Read ]
+    umask  command gives the output as 0022
+    first   digit 0 ==> it is a octal number.	
+    second  digit 0	==> 
+    third   digit 2 ==> 
+	fourth  digit 2 ==> 
+	
+	when the file is creted what linux does is it subtracts the value 666 for a file and 777 
+	for a directoy  then we get 666-022=644 i.e the default value for a files.
+    owner can read/write
+    grouo can only read
+    other users only can read.	
+ 
+   
+13. ls command used to see the contents of the directory.
+    ls  -> displays files and directories in the current direcroy.
+	ls $HOME  display the files and directories of home folder.
+	
+	a) get the file permission details.
+	   ls -l     <display long lists>
+	 
+	 total 2
+	-rwxrwxrwx 1 root root 649 Mar  4 05:33 exdate.sh
+	-rwxrwxrwx 1 root root 408 Mar  4 01:06 exsel.sh
+	-rwxrwxrwx 1 root root   0 Mar  4 06:26 old
+	drwxrwxrwx 1 root root   0 Mar  4 06:32 wa
+	
+	- normal file d-directory  owner-rwx group rwx others rwx 
+
+	
+	b) displaying a hidden file.
+	   creating hidden file 
+	   touch .tempfile   < placing . at the begining of the file name creates hidden file.>
+	   mv  myfile .myfile 
+	   
+	   to see the hidden files.
+	   ls -a 
+
+14   chmod  - change the file/directory permissions.
+     Permissions are to specify what a particular person may or may not do with respect to a 
+	 file or directory.
+	 
+	 Linux Permissions are 
+		r read 		- you may view the contents of the file.
+		w write 	- you may change the contents of the file.
+		x execute 	- you may execute or run the file if it is a program or script.
+		
+	 For every file we define 3 sets of people for whom we may specify permissions.
+	 
+		owner - a single person who owns the file. 
+		        ( typically the person who created the file 
+				  but ownership may be granted to some one else by certain users )
+				  
+		group - every file belongs to a single group.
+		
+		others - everyone else who is not in the group or the owner.
+		
+		
+	    Command to View the file permissions: ls -l [path]
 
 
 
 
+    
+     if execute permission is provided to directory then we can double click and get in to it.
+
+15.  uname  - this command gives the computer details.       	 
+	 uname -a
+     Linux ubuntu 4.4.0-31-generic #50-Ubuntu SMP Wed Jul 13 00:06:14 UTC 2016 i686 i686 i686 GNU/Linux
 
 
+16. file command.
+      file a.txt 
+      a.txt: ASCII text
+      file gives the kind of the files in a directory.
+	  
+	  file /bin/bash 
+      /bin/bash: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=1894fe5be87977e6a283ef5eadfb88f7e08b2d01, stripped
+	  
+
+17.  wc command --word count.
+     wc a.txt 
+     1  5 21 a.txt    [ < no of lines >   <no of words > < no of charecters > <name of the file>]	 
+	 wc -l    < no of lines >
+	 wc -w    < no of words >
+	 wc -c    < no of charecters > 
+	 
+18. sort command - Used to sort texts.
+    sort <file names.>
+    by default alphanumeric sort	
+	numeric sort can be done using sort -n 
+	control+D to end of document when running from the terminal.
+	
+19. cut command  used to filtering text.
+    cut uses by default tab as the seperaotr.
+	
+	Example:
+	
+	 create file with contents as below.
+	 
+	 # cat players 
+		name  sport Age
+		sachin cricker 42
+		fed    tennies 37
+		tiger  film 34
+		dravid cric  45
+		harsh swim 34
+		karthik basket 13
+		kobe   run 34
+		
+	 in this example we have spaces as delimiter and 3 field in each line.
+
+     
+     cut -d "" -f 1,2,3  players  display everthing 
+	 cut -d "" -f 1 players        display only name field that is the first field.
+      	 
+     -d to specify the delimiter 
+	 -f to select the range of the field needed.
+	 
+20.   Convert & Copy Files With 'dd'
+     dd command is used for conversion.
+	 Exammple: to convert all to uppercase letters.
+	 
+	 dd if=test of=test.out conv=ucase
+	    if       --- input filename.
+		of       --- output filename.
+		conv     --- convert option.  ucase  = to convert all to upper case.
+		                              lcase  = to convert all to lower case
+									  
+	dd can be used for many other useful conversion.
+	
+21. man command.
+    help repository of linux commands.
+	man cat
+	man cal
+
+22. banner 
+   banner command is used to create a fancy text.
+   banner "bye bye"
+   Limitation:- prints only 10 charecter in a line.
+   
+23. compress command.
+   1.create a huge text file 
+     for i in {1..1000000}; do echo "blabla " >> test.in;done
+   2.Compres the file using the compress commnad as below
+     # compress -v test.in 
+     test.in:  -- replaced with test.in.Z Compression: 99.77%
+   3. ls
+	  test.in.Z
+	  
+   4. to read the compressed file.
+      zcat test.in.Z    [ normal cat command can not read the compresed file.]
+
+24. input file creation for example.
+    for i in {1..5000};do echo "blabla blabla blabla blabla  blabla blabla blabla blabla" >> test.in; done
+	wc test.in 
+    10000  80000 570000 test.in
+	
+
+25. Hello World!  example.
+    
+	
+   
+   
+	
+
+       
+
+									  
+									  
+									  
+		
+	 
+
+	 
+    
+ 
+
+    
+	 
+
+	 
+	
+	 
+    	
+	 
+	 
 
 
+      
+  
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 
 
