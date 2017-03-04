@@ -1371,18 +1371,86 @@ https://www.youtube.com/watch?v=-GnLLXPjLN4
 
 
 ---------------------------------------------------------------------------------------------------    
+Advanced example.
+
+create a folder for every month starting from 2012 to 2017
+mkdir -p {2012..2017}-{01..12}
+mkdir Account_{2016..2018}_{01..12}
+
+Removing the folder creted above.
+ls | grep -E [0-9]{4} | xargs rm -rvf
+rm -rvf Account_201*
+---------------------------------------------------------------------------------------------------    
+aliasing.   setting one command to another command.
+alias example.
+
+alias ls=$(echo hi)
+
+---------------------------------------------------------------------------------------------------   
+https://www.youtube.com/watch?v=uqHjc7hlqd0
+
+Command types in bash
+
+1. File:  External Executable file.
+2. Builtin command compiled in as part of bash
+3. Keyword : Reserved syntactic word.
+4. Function : user definable named compound commad
+5. Alias: User definable, simple command substitution.
+
+man bash
+man man
+help
+help help
+
+
+do done
+while until for select
+if case 
+
+Command Groups 
+      Grouped list of commands, sharing any external redirections and whose return value is that of the list.
+      (list) {list;}
+	  
+	  
+
+while loop
+-----------
+while list1;do list2;done
+
+Execute list1; if success, execute list2 and repeat.
+continue until list1 returns a non zero status (fails).
+
+  
+
+until loop
+-----------
+until list1;do list2;done
+
+Execute list1; if Failure, execute list2 and repeat.
+continue until list1 returns a status 0 (success).
+
+Reading line by line from a file 
+while read line ; do echo $line;done < test.txt
+
+i=0;
+j=20
+until [ $i -eq "$j" ]; do echo $i; let i=$i+1; done
+
+c style for loop
+j=20
+for (( i=0;i<j;i++)); do echo $i; done
+
+select loop  : specifically to get the user input.
+can be used to build some kind of menu system.
+
+======================================================================================
+									TESTS
+======================================================================================
 
 
 
 
-
-
-
-
-
-
-
-
+======================================================================================
 
 
 
