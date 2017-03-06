@@ -1,3 +1,24 @@
+REFERENCES:
+
+Job Control commands:  ps kill jobs bg fg http://linuxcommand.org/lts0080.php
+                                          http://www.guru99.com/file-permissions.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Bash scripting
 ----------------------------------------------------------------------------------------------------
 Change to root user :   sudo bash     or su 
@@ -721,17 +742,133 @@ echo $?
 here 85 is the value for the bad arguments.
 
 in this example basename $0 gives the name of the script file executing.
--r will retuen true if the user running the test has the permission to read the file.
-   file exists and redable
--e tests if the file is exists at all.
--f tests if the regular file exists not a directory.
--s file exists not a zero size file.
--w will return true if the user running the test has the permission to write the file.
--x will return true if the user running the test has the permission to execue.
-! reverses the result of the file test operation
-nested if statemnt in shell
 
+====================================================================================================
+TEST OPERATOR OR COMMAND.
+====================================================================================================
+TEST  : test - check file types and compare values      
+
+SYNOPSIS
+       test EXPRESSION
+       test
+       [ EXPRESSION ]
+       [ ]
+	   [[  ]]  SOME OLD BASH COMMAND.
+       [ OPTION
+DESCRIPTION: Exit with the status determined by EXPRESSION.
+
+Note:-  An omitted EXPRESSION defaults to false.
+        Example: 
+		$  if [ ];then echo "True";else echo "False";fi
+		OUTPUT:  False
+
+FILE TESTS.
+	-b FILE : FILE exists and is block special
+    -c FILE : FILE exists and is character special            
+    -d FILE : FILE exists and is a directory
+    -e FILE : FILE exists
+    -f FILE : FILE exists and is a regular file            
+    -g FILE : FILE exists and is set-group-ID
+    -G FILE : FILE exists and is owned by the effective group ID      
+    -h FILE : FILE exists and is a symbolic link (same as -L)
+    -k FILE : FILE exists and has its sticky bit set
+    -L FILE : FILE exists and is a symbolic link (same as -h)
+    -O FILE : FILE exists and is owned by the effective user ID
+    -p FILE : FILE exists and is a named pipe
+    -r FILE : FILE exists and read permission is granted
+    -s FILE : FILE exists and has a size greater than zero
+    -S FILE : FILE exists and is a socket
+    -t FD   : FILE descriptor FD is opened on a terminal
+    -u FILE : FILE exists and its set-user-ID bit is set
+    -w FILE : FILE exists and write permission is granted
+    -x FILE : FILE exists and execute (or search) permission is granted
+	
+STRING TESTS
+    -n STRING  				: the length of STRING is nonzero      
+    -z STRING  				: the length of STRING is zero
+	STRING1 = STRING2  		: the strings are equal             
+    STRING1 != STRING2		: the strings are not equal
+	
+INTEGER TESTS OR COMPARISON
+	INTEGER1 -eq INTEGER2   : INTEGER1 is equal to INTEGER2
+	INTEGER1 -ge INTEGER2   : INTEGER1 is greater than or equal to INTEGER2            
+    INTEGER1 -gt INTEGER2   : INTEGER1 is greater than INTEGER2           
+    INTEGER1 -le INTEGER2   : INTEGER1 is less than or equal to INTEGER2             
+    INTEGER1 -lt INTEGER2   : INTEGER1 is less than INTEGER2             
+    INTEGER1 -ne INTEGER2   : INTEGER1 is not equal to INTEGER2
+              
+FILE COMPARISON
+	FILE1 -ef FILE2         : FILE1 and FILE2 have the same device and inode numbers
+    FILE1 -nt FILE2         : FILE1 is newer (modification date) than FILE2
+    FILE1 -ot FILE2         : FILE1 is older than FILE2
+	
+====================================================================================================
+! reverses the result of the file test operation
 $$ will give the process id of the script.
+----------------------------------------------------------------------------------------------------
+FILE PERMISSIONS.
+----------------------------------------------------------------------------------------------------
+chmod chown chgrp 
+Linux uses the same permission scheme as Unix.
+Permission :- Read Write Execute.
+Execute: Run the file as a program.
+
+To see the permission settings of a file 
+ls -l <filename/direcroyname>
+
+$ ls -l example.sh 
+-rwxrwxrwx 1 root root 120 Mar  5 03:27 example.sh
+
+Note:-
+      OWNER GROUP OTHERS
+
+
+Common setting for directory is :  755
+Common setting for file default :  644
+
+
+
+Number				Permission Type						Symbol
+0					 No Permission						 ---
+1					 Execute	                         --x
+2					 Write	                             -w-
+3					 Execute + Write	                 -wx
+4					 Read	                             r--
+5					 Read + Execute	                     r-x
+6					 Read +Write	                     rw-
+7					 Read + Write +Execute	             rwx
+
+
+Symbolic Mode to set the permission
+
++	Adds a permission to a file or directory
+-	Removes the permission
+=	Sets the permission and overrides the permissions set earlier.
+
+
+User Denotations
+u   user/owner
+g   group
+o   other
+a   all
+
+change the user and group together using the command.
+chown user:group
+
+Ownership issue
+In some case you want to grant permission to other user while keeping ownership to self.
+
+s permission
+is used to deal with this situations. s options is used to add both user ID and group ID permission to a file.
+
+Sticky Bit Permissions
+Sticky Bit is used for directories to protect files within them. 
+Files in a directory with the sticky bit set can only be deleted or renamed by the 
+root user or the owner of the directory.
+
+http://www.computernetworkingnotes.com/managing-file-system-security/sticky-bit.html
+
+
 
 ----------------------------------------------------------------------------------------------------
 File test opeartors
@@ -907,7 +1044,7 @@ stderr : display standard error messages on the standard screen with file descri
 
 Redirection:   
 
-standard input only redirection   1>test1.txt
+standard input only redirection    1>test1.txt
 standard output only redirection   2>test2.txt
 standard error  only redirection   3>test3.txt
 
@@ -1936,17 +2073,373 @@ BASIC COMMANDS
 
 25. Hello World!  example.
     
+	echo command is used to display the stream of strings
+	.sh extension is used to specify the shell script.
 	
+	Example:-
+	echo "Hello world"	
+	Comment in a shell script is achived by using # 
+	# this is a comment.	
+    # as the first charecter in the line for writing comments.
    
-   
+	by default the file created does not have execute permission hence we need to provide the
+	execute permission chmod +x <script name>
 	
+26  Variables
+    variable can hold strings or numbers.
+	variable names are case sensitive.
+	it can start with alphbetic charecter or _ it can not start with numbers.
+	
+	
+27.  read command. - used to get the user input.
+     echo command by default puts new line at the end.
+	 to access the variable in the script we need to use $<variable name>
 
-       
+28.  expr or bc for mathematical expression.     
+	 positional parameters are the system variables when the scripts are executed.
+	 $1 is the first positional parameter.
+	 
+29  set command
+    set command below assigns values to positiona parameters.
+    set shell scripting is cool!
+	echo $1 $2 $3  will print shell scripting is
+	$*  --> matches all the positional parameter value and display everthing.
+	============================================================================	
+	Example:---
+	root@ubuntu:~/wa# set a b c d e
+	root@ubuntu:~/wa# echo $*
+	a b c d e
+	root@ubuntu:~/wa# echo $1
+	a
+	root@ubuntu:~/wa# echo $2
+	b
+	root@ubuntu:~/wa# echo $3
+	c
+	root@ubuntu:~/wa# echo $4
+	d
+	root@ubuntu:~/wa# echo $5
+	e
+	root@ubuntu:~/wa# echo $6
 
-									  
-									  
-									  
+	root@ubuntu:~/wa# 
+	============================================================================
+
+30  Reverse Quotes Or Accent Graves  :  `   `
+    will be used to execute the command within the command in linux.
+	Example: to set the positional parameter from the text file using cat commnad.
+	
+	set `cat data.in`
+	echo $1
+	============================================================================
+	root@ubuntu:~/wa# cat > data.in
+	This is fine
+	that is ok
+	root@ubuntu:~/wa# 
+	root@ubuntu:~/wa# 
+	root@ubuntu:~/wa# set `cat data.in`
+	root@ubuntu:~/wa# echo $1
+	This
+	root@ubuntu:~/wa# echo $2
+	is
+	root@ubuntu:~/wa# echo $4
+	that
+	root@ubuntu:~/wa# echo $3
+	fine
+	root@ubuntu:~/wa# echo $*
+	This is fine that is ok
+	root@ubuntu:~/wa# 
+    ============================================================================
+    
+
+31  who am i   gives the details of who loggled in currently.
+    In the latest linux system.
+	
+	root@ubuntu:~/wa# who
+	linux    tty7         2017-03-04 22:33 (:0)
+	name     terminal time.
+
+    root@ubuntu:~/wa# set `who`
+	root@ubuntu:~/wa# echo $1
+	linux
+	root@ubuntu:~/wa# echo $*
+	linux tty7 2017-03-04 22:33 (:0)
+	root@ubuntu:~/wa# 
+	
+	
+32  Count number of command line arguments.
+    no of positional parameters
+	root@ubuntu:~/wa# set tom hanks is my favourite actor
+	root@ubuntu:~/wa# echo $#
+	6
+	root@ubuntu:~/wa# 
+	
+	 $#  - gives the total number of possitional parameter is assigned.
+	 
+33.  Mathematical operations
+     Airtmentic:
+	 
+	 Back slash -- Escape sequence.
+	 
+	 expr command needs to be used to inform the shell that evaluate mathematical expression.
+	 #!/bin/bash
+
+		#Airthmatic operation example
+		a=100
+		b=500
+		c=70
+		result=`expr $a + $b + $c`
+		echo "sum of $a+$b+$c = $result"
+     
+	 OUTPUT:
+	 # ./sample.sh 
+     sum of 100+500+70 = 670
+	 
+	 Limitation of expr command is it can work only with integer values.
+
+34.  Working with real numbers or floating point numbers.
+     bc is the command for rela number airthmetic.
+     
+	 pipe is used to feed the output of one command to another command in linux.
+	 The values are fed to bc by using the echo command and executed from there.
+     we can mix both integer and floating point numbers to calculate.
+	 
+		#!/bin/bash
+		#Floating point operation
+		a=10.5
+		b=90.5
+		c=100.98
+		d=24
+		echo `echo $a + $b | bc`
+		echo `echo $a + $b +$c +$d | bc`
 		
+	 OUTPUT:
+	    $ ./float.sh 
+			101.0
+			225.98 
+	
+35.  Escape sequences.
+     To modify the behaviour of echo command.
+	 bunch of back slash charecters.
+	 \n Escap sequence  :  newline
+	 \r carriage return.
+	 \b back space
+	 \t tabs space.
+	 
+	 
+	 Example:
+		#!/bin/bash
+		#Escape sequence example.
+		echo -e "Line1\nLine2\nLine3"
+
+	 OUTPUT:
+			$ ./escape.sh 
+			Line1
+			Line2
+			Line3
+			
+	
+	Example: \r
+	
+	#!/bin/bash
+	#Escape sequence example.
+	echo -e "Line1\rLine2\rLine3"
+
+	 OUTPUT:
+	 ./escape.sh 
+	 Line3					  --> Line3 overwrote Line1 and Line2 as the curser was returned.
+	 
+	 
+	 Example: \t     tab charecter.
+	 
+		#!/bin/bash
+		#Escape sequence example.
+		echo -e "Line1\tLine2\tLine3"
+		
+	 OUTPUT: 
+	 ./escape.sh 
+	 Line1	Line2	Line3    [SEPERATED BY TAB SPACE.]
+	 
+	 Example : /b back space charecter.
+	 
+	 #!/bin/bash
+		#Escape sequence example.
+		echo -e "Line1 \bLine2 \bLine3"
+		
+	 OUTPUT: 
+	 ./escape.sh
+	 Line1Line2Line3     --> one one space are removed as back space is included.
+	 
+	 
+	 
+	 Example: Formatterd text bold color etc.
+	 
+	 #!/bin/bash
+     #Escape sequence example.
+     echo  -e "\033[1m Line1\tLine2 \tLine3\033[0m"
+	 
+	 OUTPUT:
+	  Line1	Line2 	Line3   #will be in bold letters.
+	  
+
+36   tput command.
+     formatted output. more controlled output.
+	 
+	 Example:-  tput clear     --> will clear the screen including the shell prompt.
+		#!/bin/bash
+		tput clear
+		echo -e "rows:\c"
+		tput lines
+		echo -e "coloumn:\c"
+		tput cols
+		tput cup 15 20
+		tput bold
+		echo -e "This is bold"
+		echo -e "Back to prompt"
+		echo -e "\033[0m"
+		
+	 OUTPUT:
+----------------------------------------------------------------------------------------------------
+		rows:33
+		coloumn:80
+
+
+
+
+
+
+
+
+
+
+
+
+
+							This is bold
+		Back to prompt
+
+		linux@ubuntu:/mnt/hgfs/GitWa/bashscripts$ 
+----------------------------------------------------------------------------------------------------	 
+	 
+37.  if [  ] 
+     then
+	 elif [ ]
+	 then
+	 else
+	 fi
+	 
+38   Files  and files checks.
+     block special / charecter text file. 
+
+39.  Logical opearotor
+	 AND OR NOT
+	 And operator  : -a
+	 OR  operator  : -o
+	 NOT operaotor :  !
+	 
+	 
+	    #!/bin/bash
+		#Logical operator on Integer.
+		a=40
+		b=40
+		c=400
+		if [ $a -eq $b -a $a != $c ]
+		then
+		   echo "A is equal to B and  not equal to c"
+		fi
+		#on strings.
+		firstrank="srichaitanya"
+		secondrank="srichaitanya"
+		thirdrank="srichaitanya"
+		if [ "$firstrank" = "$secondrank" -a "$firstrank" =  "$thirdrank" ]
+		then
+		   echo "First Second and third rank achived by Srichaitanya"
+		fi
+
+	 
+40   case example.
+		#!/bin/bash
+		echo "Enter a charecter: \c"
+		read var
+		case $var in
+		[a-z] ) echo "Small case letter" ;;
+		[A-Z] ) echo "Upper case letter" ;;
+		[0-9] ) echo "You have entered digit" ;;
+		?) echo "Special symbol" ;;
+		*) echo "Default case match" ;;
+		esac
+	 
+
+41   while loop , until loop and for loop
+     control variable initalization
+	 control variable under test condition.
+	 control variable increment and decrement
+	 
+		#!/bin/bash
+		count=1
+		while [ $count -lt 10 ]
+		do
+		  echo $count;
+		  count=`expr $count + 1`
+		done
+		
+	 OUTPUT:
+			./example.sh 
+			1
+			2
+			3
+			4
+			5
+			6
+			7
+			8
+			9
+
+
+     Until loop.
+    =====================================	 
+		#!/bin/bash
+		count=1
+		until [ $count -eq 10 ]
+		do
+		  echo $count;
+		  count=`expr $count + 1`
+		done
+    =====================================
+	 for item in *; do echo $item;done
+	 
+42. Real numbers or floating numbers are compared using string operation or by considring real 
+    numbers as string.
+	
+	example:-
+	
+	 a=4.5
+	 b=4.55
+   
+     if [ "$a" = "$b" ]
+	 then
+	  echo "Real numbers are equal"
+	  else 
+	       "Real numbers not equal"
+	 fi
+	 
+43. 	 
+	 
+	 
+	 
+	 
+	 
+
+	 
+
+	 
+
+	 
+
+
+
+
+
+    	 
 	 
 
 	 
